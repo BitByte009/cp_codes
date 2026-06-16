@@ -1,0 +1,76 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+vector<int> tin, low, vis;
+vector<pair<int,int>> bridges;
+int timer;
+//for atriculation points remove the //
+
+void dfs(int node, int parent, vector<vector<int>> &adj)
+{
+    vis[node] = 1;
+    tin[node] = low[node] = timer++;
+    //ll cnild_cnt=0;
+    for(auto child : adj[node])
+    {
+        if(child == parent)
+            continue;
+
+        if(vis[child]) // Back Edge
+        {
+            low[node] = min(low[node], tin[child]);
+        }
+        else // Tree Edge
+        {
+        //child_cnt++;
+            dfs(child, node, adj);
+
+            low[node] = min(low[node], low[child]);
+
+            if(low[child] > tin[node])
+            {
+                bridges.push_back({node, child});
+            }
+        }
+    }
+   // if(parent==-1 && child_cnt>=0)
+    //points.push_back(node);
+}
+
+int main()
+{
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<int>> adj(n);
+
+    for(int i = 0; i < m; i++)
+    {
+        int u, v;
+        cin >> u >> v;
+
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    tin.resize(n);
+    low.resize(n);
+    vis.assign(n, 0);
+
+    timer = 0;
+
+    for(int i = 0; i < n; i++)
+    {
+        if(!vis[i])
+            dfs(i, -1, adj);
+    }
+
+    cout << "Bridges:\n";
+
+    for(auto [u, v] : bridges)
+    {
+        cout << u << " " << v << "\n";
+    }
+
+    return 0;
+}
