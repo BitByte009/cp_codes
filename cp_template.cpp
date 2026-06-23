@@ -122,13 +122,42 @@ vl primeFactors(ll n)
         factors.push_back(n);
     return factors;
 }
+
+long long fact[MAXN], invFact[MAXN];
+
+long long binExp(long long a, long long b) {
+    long long res = 1;
+    while (b) {
+        if (b & 1)
+            res = res * a % MOD;
+        a = a * a % MOD;
+        b >>= 1;
+    }
+    return res;
+}
+
+void precompute() {
+    fact[0] = 1;
+    for (int i = 1; i < MAXN; i++)
+        fact[i] = fact[i - 1] * i % MOD;
+
+    invFact[MAXN - 1] = binExp(fact[MAXN - 1], MOD - 2);
+
+    for (int i = MAXN - 2; i >= 0; i--)
+        invFact[i] = invFact[i + 1] * (i + 1) % MOD;
+}
+
+long long nCr(int n, int r) {
+    if (r < 0 || r > n) return 0;
+    return fact[n] * invFact[r] % MOD * invFact[n - r] % MOD;
+}
 void solve(){
-  
+
 }
  
     int32_t main()
     {
-        // pre_fact();
+      // precompute();
         abid
  
             int t;
